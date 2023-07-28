@@ -17,9 +17,8 @@ score = []
 dates = []
 
 driver.get(link)
-time.sleep(3)
 html = driver.page_source
-soup = BeautifulSoup(html, features='lxml')
+soup = BeautifulSoup(html)
 
 for i in range(50):
     for line in soup.find_all('td')[1:]:
