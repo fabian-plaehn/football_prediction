@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 import configparser
 import datetime
+import lxml
 
 driver = webdriver.Firefox()
 
