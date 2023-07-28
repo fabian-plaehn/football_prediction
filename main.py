@@ -9,12 +9,13 @@ import configparser
 import datetime
 import lxml
 
-driver = webdriver.Firefox()
+driver = webdriver.Edge()
 
 link = "https://int.soccerway.com/teams/germany/fc-bayern-munchen/961/"
 
 score = []
 dates = []
+
 
 driver.get(link)
 html = driver.page_source
