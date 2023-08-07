@@ -76,7 +76,7 @@ def run_through(loader, opti, model, loss_function, eval=False):
             loss.backward()
             opti.step()
         else:
-            loss = loss_eval(y_pred, y)
+            loss = loss_function(y_pred, y)
 
         epoch_correct += torch.sum(torch.eq(y.cpu(), torch.round(y_pred.cpu().detach())))
         epoch_total += len(y)
@@ -90,6 +90,7 @@ def run_through(loader, opti, model, loss_function, eval=False):
 def run_training(params, loss_function, num_epochs,
                  train_dataloader, val_dataloader, verbose=False):
     pbar = tqdm.trange(num_epochs)
+    torch.manual_seed(42)
     model = Model(58, 1, params["hidden_layers"])
     model = model.cuda()
     opt = optim.Adam(model.parameters(), lr=params["lr"], weight_decay=params["weight_decay"])
@@ -158,7 +159,7 @@ def plot(title, label, train_results, val_results, yscale='linear', save_path=No
 
 
 if __name__ == "__main__":
-    torch.manual_seed(42)
+
 
     print(X_train.shape)
 
@@ -167,7 +168,6 @@ if __name__ == "__main__":
 
     n_epochs = 180
     loss = nn.BCELoss()
-    loss_eval = nn.CrossEntropyLoss()
     best_acc = 0
     for j in range(100):
         num_hidden = random.randint(1, 5)
@@ -185,6 +185,7 @@ if __name__ == "__main__":
         if new_acc > best_acc:
             print(f"new best acc: {new_acc}")
             print("with param")
+            param["best_acc"] = new_acc
             pprint.pprint(param)
             best_acc = new_acc
             torch.save(model_dict, "best_network.pt")

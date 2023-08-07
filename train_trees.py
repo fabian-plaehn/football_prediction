@@ -41,6 +41,7 @@ for i in range(100):
     if acc > best_value:
         print(f"new best value: {acc}")
         print(f"with parameter:")
+        param["best_acc"] = acc
         pprint.pprint(param)
         best_settings = param
         best_value = acc
@@ -53,6 +54,6 @@ for i in range(100):
         with open("best_boosted.pickle", "wb") as f:
             pickle.dump(bst, f)
 
-        with open("best_param.pickle", "wb") as f:
+        with open("best_boosted_param.pickle", "wb") as f:
             pickle.dump(best_settings, f)
         # xgb.to_graphviz(bst, num_trees=2)
