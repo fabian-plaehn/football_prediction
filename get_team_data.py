@@ -10,25 +10,13 @@ import configparser
 import datetime
 import lxml
 from selenium.webdriver.common.by import By
+from club_list import club_list
 
 driver = webdriver.Edge()
 
-
-@dataclasses.dataclass
-class soccerway_club_data:
-    country: str
-    club_name: str
-    number: str
-    agree_id: str
-
-
-club_list = [
-             soccerway_club_data("germany", "fc-bayern-munchen", "961", "css-1dcy74u"),
-             soccerway_club_data("england", "arsenal-fc", "660", "css-1v7z3z3"),
-             ]
-# TODO add more teams
-
 df = None
+
+until_year = 2020
 
 for club_data in club_list:
     link = "https://int.soccerway.com/teams/" + club_data.country + "/" + club_data.club_name + "/" + club_data.number + "/"
@@ -39,9 +27,9 @@ for club_data in club_list:
     dates = []
 
     driver.get(link)
-    time.sleep(5)
+    time.sleep(3)
 
-    for i in range(10):  # more option css-sob0ma # false css-1dcy74u # accept css-1dcy74u
+    for i in range(club_data.max_try_cookie):  # more option css-sob0ma # false css-1dcy74u # accept css-1dcy74u
         try:
             driver.find_element(by=By.CLASS_NAME, value=club_data.agree_id).click()
             time.sleep(0.1)
@@ -55,8 +43,9 @@ for club_data in club_list:
     html = driver.page_source
     soup = BeautifulSoup(html)
 
-    for i in range(3):
-        for line in soup.find_all('td')[1:]:
+    while True:
+        i = 0
+        for i, line in enumerate(soup.find_all('td')):
             if "result-win" in str(line):
                 wins.append(1)
                 losses.append(0)
@@ -74,8 +63,15 @@ for club_data in club_list:
             print(line)
             start_idx = [m.start() + len('/matches/') for m in re.finditer('/matches/', str(line))]
             date = str(line)[start_idx[0]:start_idx[0] + len("2023/00/00")]
+            print(int(date[:4]))
+            if int(date[:4]) == until_year:
+                break
             dates.append(date)
-
+        if i != len(soup.find_all('td')) - 1:
+            wins.pop(-1)
+            losses.pop(-1)
+            draws.pop(-1)
+            break
         while True:
             try:
                 python_button = driver.find_element(value="page_team_1_block_team_matches_summary_11_previous")
@@ -96,6 +92,9 @@ for club_data in club_list:
         df = df_temp
     else:
         df = pd.concat([df, df_temp], axis=1)
+    print(df.shape)
 
 df.fillna(0, inplace=True)
 print(df)
+with open("team_data.pickle", "wb") as f:
+    pickle.dump(df, f)
