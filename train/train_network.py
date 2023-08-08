@@ -10,8 +10,7 @@ import pickle
 from matplotlib import pyplot as plt
 from torch import optim
 from torch.utils.data import Dataset, DataLoader
-
-from data_preproc import X_train, y_train, X_test, y_test
+from .data_preproc import X_train, y_train, X_test, y_test
 
 
 class Model(nn.Module):
@@ -86,7 +85,7 @@ def run_training(params, loss_function, num_epochs,
                  train_dataloader, val_dataloader, verbose=False):
     pbar = tqdm.trange(num_epochs)
     torch.manual_seed(42)
-    model = Model(58, 1, params["hidden_layers"])
+    model = Model(params["in_features"], 1, params["hidden_layers"])
     model = model.cuda()
     opt = optim.Adam(model.parameters(), lr=params["lr"], weight_decay=params["weight_decay"])
 
@@ -164,7 +163,9 @@ if __name__ == "__main__":
     for j in range(100):
         num_hidden = random.randint(1, 5)
         hidden_list = [4**random.randint(2, 5) for i in range(num_hidden)]
-        param = {"lr": 10 ** (random.randint(-50, -30)/10), "weight_decay": 10 ** (random.randint(-60, -30)/10),"batch_size": 2 ** random.randint(4, 6), "hidden_layers": hidden_list}
+        param = {"lr": 10 ** (random.randint(-50, -30)/10), "weight_decay": 10 ** (random.randint(-60, -30)/10),
+                 "batch_size": 2 ** random.randint(4, 6), "hidden_layers": hidden_list,
+                 "in_features": X_train.shape[1]}
 
         train_loader = DataLoader(dataset=train_set, batch_size=param["batch_size"], shuffle=True)
         test_loader = DataLoader(dataset=test_set, batch_size=param["batch_size"], shuffle=True)
@@ -180,6 +181,6 @@ if __name__ == "__main__":
             param["best_acc"] = new_acc
             pprint.pprint(param)
             best_acc = new_acc
-            torch.save(model_dict, "best_network.pt")
-            with open("best_network_param.pickle", "wb") as f:
+            torch.save(model_dict, "best_network_wo_if.pt")
+            with open("best_network_param_wo_if.pickle", "wb") as f:
                 pickle.dump(param, f)

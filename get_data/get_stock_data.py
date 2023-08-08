@@ -15,12 +15,13 @@ sma_50 = talib.SMA(data["Close"], timeperiod=50) / data["Close"]
 sma_200 = talib.SMA(data["Close"], timeperiod=200) / data["Close"]
 
 features = [target, rsi_value, sma_21, sma_50, sma_200]
+features = [target]
 
 result = pd.concat(features, axis=1)
 print(result)
 result.dropna(inplace=True)
 
 
-with open("stock_data.pickle" , "wb") as f:
+with open("stock_data_wo_if.pickle", "wb") as f:
     pickle.dump(result, f)
 

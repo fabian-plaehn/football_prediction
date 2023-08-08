@@ -2,12 +2,14 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 import xgboost as xgb
-from ..train.train_network import run_training, CustomSet, Model
 import torch
 import torch.nn as nn
-from ..train.data_preproc import X_valid, y_valid, X_train, y_train, X_test, y_test
 import pickle
 import pprint
+from train.data_preproc import X_train, X_test, X_valid, y_train, y_test, y_valid
+from train.train_network import run_training, CustomSet, Model
+
+
 
 
 def eval_network():
@@ -17,7 +19,7 @@ def eval_network():
     n_epochs = 180
     loss = nn.BCELoss()
 
-    with open("../train/best_network_param.pickle", "rb") as f:
+    with open("../train/best_network_param_wo_if.pickle", "rb") as f:
         network_param = pickle.load(f)
 
     pprint.pprint(network_param)
@@ -33,18 +35,18 @@ def eval_network():
 
 def eval_tree():
     with open("best_boosted_param.pickle", "rb") as f:
-        network_param = pickle.load(f)
+        bst_param = pickle.load(f)
 
-    print(network_param)
+    print(bst_param)
 
     dtrain = xgb.DMatrix(X_train, label=y_train)
     dtest = xgb.DMatrix(X_test, label=y_test)
-    print(network_param)
+    print(bst_param)
     evallist = [(dtrain, 'train'), (dtest, 'eval')]
-    bst = xgb.train(network_param, dtrain, 50, evallist, num_boost_round=10, early_stopping_rounds=15)
+    bst = xgb.train(bst_param, dtrain, 50, evallist, num_boost_round=bst_param["num_boost_round"], early_stopping_rounds=15)
     y_pred = np.round(bst.predict(dtest, iteration_range=(0, bst.best_iteration+1)))
     #print(bst.best_iteration)
-    acc = accuracy_score(y_test, y_pred)
+    acc = accuracy_score(dp.y_test, y_pred)
 
     print(acc)
 
@@ -86,6 +88,6 @@ def eval_together():
 
 
 if __name__ == "__main__":
-    #eval_network()
+    eval_network()
     #eval_tree()
-    eval_together()
+    #eval_together()

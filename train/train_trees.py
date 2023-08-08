@@ -25,11 +25,12 @@ for i in range(100):
         'subsample': random.random(),  # search (0, 1]
         'tree_method': 'gpu_hist',
         'nthread': 4, 'eval_metric': ['error'],
+        'num_boost_round': random.randint(5, 15)
     }
 
     evallist = [(dtrain, 'train'), (dtest, 'eval')]
 
-    bst = xgb.train(param, dtrain, 50, evallist, num_boost_round=10, early_stopping_rounds=15)
+    bst = xgb.train(param, dtrain, 50, evallist, num_boost_round=param["num_boost_round"], early_stopping_rounds=15)
 
     y_pred = np.round(bst.predict(dtest, iteration_range=(0, bst.best_iteration+1)))
     acc = accuracy_score(y_test, y_pred)

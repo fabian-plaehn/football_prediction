@@ -1,12 +1,11 @@
 import pickle
-
 import numpy as np
 import pandas as pd
 
 with open("../get_data/team_data.pickle", "rb") as f:
     team_data = pickle.load(f)
 
-with open("../get_data/stock_data.pickle", "rb") as f:
+with open("../get_data/stock_data_wo_if.pickle", "rb") as f:
     stock_data = pickle.load(f)
 
 stock_data[0] = stock_data[0].apply(lambda x: 1 if x > 0 else 0)  # binary target
