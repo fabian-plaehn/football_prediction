@@ -37,4 +37,3 @@ top_ten_fifa = [
 
 club_list = europe_league_teams + top_ten_fifa
 
-# TODO add more teams

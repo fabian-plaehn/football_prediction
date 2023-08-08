@@ -132,7 +132,7 @@ def plot(title, label, train_results, val_results, yscale='linear', save_path=No
     train_label, val_label = "Training " + label.lower(), "Validation " + label.lower()
 
     sns.set(style='ticks')
-    # todo low feature 15min 30 window and big feature 5min big model
+
     plt.plot(epoch_array, train_results, epoch_array, val_results, linestyle='dashed', marker='o')
     legend = ['Train results', 'Validation results']
 
