@@ -1,21 +1,14 @@
-import dataclasses
 import pickle
 import time
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import pandas as pd
 import re
-from pathlib import Path
-import configparser
-import datetime
-import lxml
 from selenium.webdriver.common.by import By
 from club_list import club_list
 
 driver = webdriver.Edge()
-
 df = None
-
 until_year = 2020
 
 for club_data in club_list:

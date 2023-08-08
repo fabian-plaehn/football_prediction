@@ -1,6 +1,4 @@
 import random
-import pprint
-import time
 from copy import deepcopy
 import pprint
 import seaborn as sns
@@ -8,11 +6,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import tqdm
-import xgboost as xgb
 import pickle
-import pandas as pd
 from matplotlib import pyplot as plt
-from sklearn.metrics import accuracy_score
 from torch import optim
 from torch.utils.data import Dataset, DataLoader
 
@@ -159,10 +154,7 @@ def plot(title, label, train_results, val_results, yscale='linear', save_path=No
 
 
 if __name__ == "__main__":
-
-
     print(X_train.shape)
-
     train_set = CustomSet(torch.tensor(X_train, dtype=torch.float32), torch.tensor(y_train, dtype=torch.float32).unsqueeze(1))
     test_set = CustomSet(torch.tensor(X_test, dtype=torch.float32), torch.tensor(y_test, dtype=torch.float32).unsqueeze(1))
 

@@ -1,10 +1,8 @@
 import random
 import pprint
 import numpy as np
-import torch
 import xgboost as xgb
 import pickle
-import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.metrics import accuracy_score
 from data_preproc import X_train, y_train, X_test, y_test
@@ -34,9 +32,7 @@ for i in range(100):
     bst = xgb.train(param, dtrain, 50, evallist, num_boost_round=10, early_stopping_rounds=15)
 
     y_pred = np.round(bst.predict(dtest, iteration_range=(0, bst.best_iteration+1)))
-    #print(bst.best_iteration)
     acc = accuracy_score(y_test, y_pred)
-    #print('XGBoost model accuracy score: {0:0.4f}'.format(acc))
 
     if acc > best_value:
         print(f"new best value: {acc}")
@@ -56,4 +52,3 @@ for i in range(100):
 
         with open("best_boosted_param.pickle", "wb") as f:
             pickle.dump(best_settings, f)
-        # xgb.to_graphviz(bst, num_trees=2)

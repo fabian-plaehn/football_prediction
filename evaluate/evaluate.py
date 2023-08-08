@@ -2,12 +2,13 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 import xgboost as xgb
-from train_network import run_training, CustomSet, Model
+from ..train.train_network import run_training, CustomSet, Model
 import torch
 import torch.nn as nn
-from data_preproc import X_valid, y_valid, X_train, y_train, X_test, y_test
+from ..train.data_preproc import X_valid, y_valid, X_train, y_train, X_test, y_test
 import pickle
 import pprint
+
 
 def eval_network():
     train_set = CustomSet(torch.tensor(X_train, dtype=torch.float32), torch.tensor(y_train, dtype=torch.float32).unsqueeze(1))
@@ -16,7 +17,7 @@ def eval_network():
     n_epochs = 180
     loss = nn.BCELoss()
 
-    with open("best_network_param.pickle", "rb") as f:
+    with open("../train/best_network_param.pickle", "rb") as f:
         network_param = pickle.load(f)
 
     pprint.pprint(network_param)
