@@ -19,7 +19,7 @@ def eval_network():
     n_epochs = 180
     loss = nn.BCELoss()
 
-    with open("../train/best_network_param_wo_if.pickle", "rb") as f:
+    with open("train/best_network_param_wo_if.pickle", "rb") as f:
         network_param = pickle.load(f)
 
     pprint.pprint(network_param)
@@ -30,7 +30,7 @@ def eval_network():
                                        loss_function=loss,
                                        num_epochs=n_epochs,
                                        train_dataloader=train_loader,
-                                       val_dataloader=test_loader,
+                                       test_dataloader=test_loader,
                                        verbose=True)
 
 def eval_tree():
