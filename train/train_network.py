@@ -58,7 +58,7 @@ class Dummy_With:
 def run_through(loader, opti, model, loss_function, eval=False):
     epoch_loss = []
     model.eval() if eval else model.train()
-    epoch_correct, epoch_total = 1, 0
+    epoch_correct, epoch_total = 0, 0
     dummy_with = Dummy_With()
     for x, y in (tbar := tqdm.tqdm(loader, leave=False)):
         opti.zero_grad()
